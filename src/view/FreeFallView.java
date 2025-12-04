@@ -84,7 +84,7 @@ public class FreeFallView extends JDialog {
         progressTime.setBackground(new Color(255, 228, 216));
 
         btnDetener.setEnabled(false);
-        updateTelemetry(0, 0, 0, 0, -1, 0);
+        updateTelemetry(255, 255, 255, 255, -1, 255);
         getRootPane().setDefaultButton(btnSimular);
     }
 
@@ -142,7 +142,7 @@ public class FreeFallView extends JDialog {
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        stylePrimaryButton(btnSimular, new Color(255, 120, 76));
+        styleSecondaryButton(btnSimular, new Color(255, 120, 76));
         styleSecondaryButton(btnDetener, new Color(255, 200, 184));
         styleGhostButton(btnCalcTimeGround);
 

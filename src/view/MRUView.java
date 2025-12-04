@@ -18,6 +18,7 @@ public class MRUView extends JDialog {
 
     private final JButton btnRun = new JButton("▶ Empezar");
     private final JButton btnTimeToX = new JButton("🧮 Calcular tiempo");
+    private final JButton btnCalculateV = new JButton("⚡ Calcular velocidad");
 
     private final JLabel lblTimeValue = createValueLabel("0.00 s");
     private final JLabel lblPositionValue = createValueLabel("0.00 m");
@@ -77,7 +78,7 @@ public class MRUView extends JDialog {
         progressTime.setBackground(new Color(225, 231, 246));
 
         getRootPane().setDefaultButton(btnRun);
-        updateTelemetry(0, 0, 0, 0, 0);
+        updateTelemetry(255, 255,255,255, 255);
     }
 
     private JPanel buildFormPanel() {
@@ -119,13 +120,18 @@ public class MRUView extends JDialog {
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        stylePrimaryButton(btnRun);
+        styleSecondaryButton(btnRun);
         styleSecondaryButton(btnTimeToX);
+        styleSecondaryButton(btnCalculateV);
 
-        JPanel buttons = new JPanel(new GridLayout(1, 2, 10, 0));
+        JPanel buttons = new JPanel();
         buttons.setOpaque(false);
+        buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
         buttons.add(btnRun);
+        buttons.add(Box.createVerticalStrut(8));
         buttons.add(btnTimeToX);
+        buttons.add(Box.createVerticalStrut(8));
+        buttons.add(btnCalculateV);
 
         panel.add(buttons);
 
@@ -238,6 +244,7 @@ public class MRUView extends JDialog {
     public void setSimulationRunning(boolean running) {
         btnRun.setEnabled(!running);
         btnTimeToX.setEnabled(!running);
+        btnCalculateV.setEnabled(!running);
         showStatus(running ? "Simulación en progreso…" : "Listo para simular.");
     }
 
@@ -248,6 +255,9 @@ public class MRUView extends JDialog {
 
     public JButton getBtnRun() { return btnRun; }
     public JButton getBtnTimeToX() { return btnTimeToX; }
+    public JButton getBtnCalculateV() { return btnCalculateV; }
+    
+    public void setV(String value) { tfV.setText(value); }
 
     public double getPanelWidth() { return panel.getWidth(); }
     public void setCharacterX(double x) { panel.setX(x); }
