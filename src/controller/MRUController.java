@@ -13,6 +13,7 @@ public class MRUController {
     private double baseOffset;
     private double totalTime;
     private double x0;
+    private double finalPosition;
 
     public MRUController(MRUView view) {
         this.view = view;
@@ -76,11 +77,6 @@ public class MRUController {
 
             stopAnimation();
 
-            view.resetPosition();
-            view.updateTelemetry(0, model.positionAt(0), 0, v, 0);
-            view.setSimulationRunning(true);
-            view.showStatus("Simulación en progreso…");
-
             // Determinar xEnd para escalar la animación
             double xEnd;
             if (xf != null) {
@@ -89,6 +85,14 @@ public class MRUController {
                 // Si no hay xf, usar la posición calculada al final del tiempo
                 xEnd = model.positionAt(totalTime);
             }
+            
+            // Guardar la posición final para mostrarla en telemetría
+            finalPosition = xEnd;
+
+            view.resetPosition();
+            view.updateTelemetry(0, model.positionAt(0), 0, v, finalPosition, 0);
+            view.setSimulationRunning(true);
+            view.showStatus("Simulación en progreso…");
             
             double minX = Math.min(x0, xEnd);
             double maxX = Math.max(x0, xEnd);
@@ -140,12 +144,12 @@ public class MRUController {
         view.repaintPanel();
 
         double progress = Math.min(1, Math.max(0, t / totalTime));
-        view.updateTelemetry(t, x, displacement, model.getVelocity(), progress);
+        view.updateTelemetry(t, x, displacement, model.getVelocity(), finalPosition, progress);
         view.showStatus(String.format("Avance: %.2f m", displacement));
 
         if (t >= totalTime) {
             stopAnimation();
-            view.updateTelemetry(totalTime, model.positionAt(totalTime), model.displacementAt(totalTime), model.getVelocity(), 1);
+            view.updateTelemetry(totalTime, model.positionAt(totalTime), model.displacementAt(totalTime), model.getVelocity(), finalPosition, 1);
             view.showStatus("Simulación completada.");
         }
     }

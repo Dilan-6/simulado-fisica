@@ -79,7 +79,7 @@ public class MRUView extends JDialog {
         progressTime.setBackground(new Color(225, 231, 246));
 
         getRootPane().setDefaultButton(btnRun);
-        updateTelemetry(255, 255,255,255, 255);
+        updateTelemetry(0, 0, 0, 0, 0, 0);
     }
 
     private JPanel buildFormPanel() {
@@ -108,6 +108,8 @@ public class MRUView extends JDialog {
         panel.add(createTelemetryRow("Desplazamiento", lblDistanceValue));
         panel.add(Box.createVerticalStrut(6));
         panel.add(createTelemetryRow("Velocidad", lblVelocityValue));
+        panel.add(Box.createVerticalStrut(6));
+        panel.add(createTelemetryRow("Posición Final", lblFinalPositionValue));
         panel.add(Box.createVerticalStrut(12));
         panel.add(progressTime);
         panel.add(Box.createVerticalStrut(8));
@@ -226,12 +228,13 @@ public class MRUView extends JDialog {
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
-    public void updateTelemetry(double time, double position, double displacement, double velocity, double progress) {
+    public void updateTelemetry(double time, double position, double displacement, double velocity, double finalPosition, double progress) {
         lblTimeValue.setText(DF.format(time) + " s");
         lblPositionValue.setText(DF.format(position) + " m");
         lblDistanceValue.setText(DF.format(displacement) + " m");
         String direction = velocity >= 0 ? "→ " : "← ";
         lblVelocityValue.setText(direction + DF.format(Math.abs(velocity)) + " m/s");
+        lblFinalPositionValue.setText(DF.format(finalPosition) + " m");
 
         int progressValue = (int) Math.round(Math.max(0, Math.min(progress, 1)) * 1000);
         progressTime.setValue(progressValue);
