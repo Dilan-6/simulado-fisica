@@ -24,6 +24,7 @@ public class MRUView extends JDialog {
     private final JLabel lblPositionValue = createValueLabel("0.00 m");
     private final JLabel lblDistanceValue = createValueLabel("0.00 m");
     private final JLabel lblVelocityValue = createValueLabel("0.00 m/s");
+    private final JLabel lblFinalPositionValue = createValueLabel("0.00 m");
     private final JLabel lblStatus = new JLabel("Listo para simular.");
     private final JProgressBar progressTime = new JProgressBar(0, 1000);
 
@@ -91,7 +92,7 @@ public class MRUView extends JDialog {
         panel.add(Box.createVerticalStrut(6));
         panel.add(createInputBlock("Velocidad (m/s)", tfV));
         panel.add(Box.createVerticalStrut(6));
-        panel.add(createInputBlock("Duración (s)", tfTime));
+        panel.add(createInputBlock("Tiempo (s)", tfTime));
         return panel;
     }
 

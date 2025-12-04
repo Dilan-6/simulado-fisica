@@ -22,6 +22,7 @@ public class MRUController {
     private void setup() {
         view.getBtnRun().addActionListener(e -> startAnimation());
         view.getBtnTimeToX().addActionListener(e -> onTimeToX());
+        view.getBtnCalculateV().addActionListener(e -> onCalculateVelocity());
     }
 
     private void startAnimation() {
@@ -173,11 +174,86 @@ public class MRUController {
             }
             
             double v = Double.parseDouble(vText);
+            
+            // Validar que la velocidad no sea cero
+            if (v == 0) {
+                JOptionPane.showMessageDialog(view, 
+                    "La velocidad no puede ser cero para calcular el tiempo.\n" +
+                    "Un objeto sin velocidad nunca llegará a un destino diferente.", 
+                    "Velocidad inválida", 
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
             MRUModel model = new MRUModel(x0, v);
             double t = model.timeToReach(xf);
+            
+            // Verificar si el resultado es válido
+            if (Double.isInfinite(t) || t < 0) {
+                String message;
+                if (t < 0) {
+                    message = String.format(
+                        "No es posible llegar de x₀=%.2f m a xf=%.2f m con velocidad v=%.2f m/s.\n" +
+                        "El objeto se está moviendo en dirección opuesta al destino.", 
+                        x0, xf, v);
+                } else {
+                    message = "Error en el cálculo. Verifica los valores ingresados.";
+                }
+                JOptionPane.showMessageDialog(view, message, "Cálculo no válido", JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(view, 
+                    String.format("Tiempo para llegar de x₀=%.2f m a xf=%.2f m:\n%.2f s", x0, xf, t),
+                    "Cálculo de tiempo",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(view, "Por favor ingresa valores válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void onCalculateVelocity() {
+        try {
+            double x0 = Double.parseDouble(view.getX0());
+            
+            String xfText = view.getXf().trim();
+            if (xfText.isEmpty()) {
+                JOptionPane.showMessageDialog(view, 
+                    "Por favor ingresa la posición final (xf) para calcular la velocidad.", 
+                    "Falta posición final", 
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            double xf = Double.parseDouble(xfText);
+            
+            String timeText = view.getTime().trim();
+            if (timeText.isEmpty()) {
+                JOptionPane.showMessageDialog(view, 
+                    "Por favor ingresa la duración (tiempo) para calcular la velocidad.", 
+                    "Falta tiempo", 
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            double t = Double.parseDouble(timeText);
+            
+            // Validar que el tiempo sea mayor que cero
+            if (t <= 0) {
+                JOptionPane.showMessageDialog(view, 
+                    "El tiempo debe ser mayor que cero.", 
+                    "Tiempo inválido", 
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Calcular velocidad: v = (xf - x0) / t
+            double v = (xf - x0) / t;
+            
+            // Mostrar resultado y actualizar el campo
+            view.setV(String.format("%.2f", v));
+            
             JOptionPane.showMessageDialog(view, 
-                String.format("Tiempo para llegar de x₀=%.2f m a xf=%.2f m:\n%.2f s", x0, xf, t),
-                "Cálculo de tiempo",
+                String.format("Velocidad calculada:\nv = (xf - x₀) / t\nv = (%.2f - %.2f) / %.2f\nv = %.2f m/s", 
+                    xf, x0, t, v),
+                "Cálculo de velocidad",
                 JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(view, "Por favor ingresa valores válidos.", "Error", JOptionPane.ERROR_MESSAGE);
