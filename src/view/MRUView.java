@@ -8,7 +8,16 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.text.DecimalFormat;
 
+/**
+ * Vista principal para la simulación de Movimiento Rectilíneo Uniforme (MRU).
+ * Proporciona una interfaz gráfica con controles para configurar parámetros,
+ * visualizar la animación y mostrar telemetría en tiempo real.
+ * 
+ * @author SimuladorFisica
+ * @version 1.0
+ */
 public class MRUView extends JDialog {
+    /** Formato para mostrar valores numéricos con 2 decimales */
     private static final DecimalFormat DF = new DecimalFormat("0.00");
 
     private final JTextField tfX0 = new JTextField("0");
@@ -82,6 +91,11 @@ public class MRUView extends JDialog {
         updateTelemetry(0, 0, 0, 0, 0, 0);
     }
 
+    /**
+     * Construye el panel de formulario con campos de entrada.
+     * 
+     * @return Panel con campos de posición inicial, final, velocidad y tiempo
+     */
     private JPanel buildFormPanel() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -228,6 +242,16 @@ public class MRUView extends JDialog {
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
+    /**
+     * Actualiza los valores de telemetría mostrados en la vista.
+     * 
+     * @param time Tiempo transcurrido en segundos
+     * @param position Posición actual en metros
+     * @param displacement Desplazamiento desde la posición inicial en metros
+     * @param velocity Velocidad constante en m/s
+     * @param finalPosition Posición final esperada en metros
+     * @param progress Progreso de la simulación (0.0 a 1.0)
+     */
     public void updateTelemetry(double time, double position, double displacement, double velocity, double finalPosition, double progress) {
         lblTimeValue.setText(DF.format(time) + " s");
         lblPositionValue.setText(DF.format(position) + " m");
@@ -241,10 +265,20 @@ public class MRUView extends JDialog {
         progressTime.setString(String.format("%d %% del tiempo", Math.round(progressValue / 10.0)));
     }
 
+    /**
+     * Muestra un mensaje de estado en la vista.
+     * 
+     * @param text Texto del estado a mostrar
+     */
     public void showStatus(String text) {
         lblStatus.setText(text);
     }
 
+    /**
+     * Actualiza el estado de los botones según si la simulación está corriendo.
+     * 
+     * @param running true si la simulación está en progreso, false en caso contrario
+     */
     public void setSimulationRunning(boolean running) {
         btnRun.setEnabled(!running);
         btnTimeToX.setEnabled(!running);
@@ -268,6 +302,10 @@ public class MRUView extends JDialog {
     public void repaintPanel() { panel.repaint(); }
     public void resetPosition() { panel.setX(0); }
 
+    /**
+     * Panel interno que renderiza la animación visual del MRU.
+     * Dibuja el escenario con cielo, carretera y el vehículo en movimiento.
+     */
     static class MRUAnimationPanel extends JPanel {
         private double x = 0;
         private final ImageIcon car = ImageLoader.load("resources/car.png", 120, 70);
@@ -276,6 +314,11 @@ public class MRUView extends JDialog {
             setBackground(new Color(222, 232, 255));
         }
 
+        /**
+         * Establece la posición horizontal del vehículo en píxeles.
+         * 
+         * @param x Posición X en píxeles (mínimo 20 para evitar salirse del borde)
+         */
         public void setX(double x) {
             this.x = Math.max(20, x);
             repaint();

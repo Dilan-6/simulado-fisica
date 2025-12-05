@@ -1,35 +1,73 @@
 package controller;
-
 import model.FreeFallModel;
 import util.ImageLoader;
 import view.FreeFallView;
 
 import javax.swing.*;
 
+/**
+ * Controlador para la simulación de caída libre.
+ * Gestiona la lógica de negocio, la animación y la interacción entre
+ * el modelo y la vista de caída libre.
+ * 
+ * @author SimuladorFisica
+ * @version 1.0
+ */
 public class FreeFallController {
+    /** Vista asociada al controlador */
     private final FreeFallView view;
+    
+    /** Timer que controla la animación de la simulación */
     private Timer animationTimer;
+    
+    /** Tiempo actual de la simulación en segundos */
     private double t;
+    
+    /** Modelo físico de caída libre */
     private FreeFallModel model;
 
+    /** Nivel del suelo en píxeles dentro del panel de animación */
     private double groundLevel;
+    
+    /** Escala de conversión de metros a píxeles */
     private double pixelScale;
+    
+    /** Tiempo total hasta que el objeto toca el suelo */
     private double totalTime;
+    
+    /** Altura inicial del objeto en metros */
     private double initialHeight;
+    
+    /** Velocidad inicial del objeto en m/s */
     private double initialVelocity;
+    
+    /** Aceleración gravitacional */
     private double acceleration;
 
+    /**
+     * Construye un nuevo controlador de caída libre.
+     * 
+     * @param view Vista de caída libre a controlar
+     */
     public FreeFallController(FreeFallView view) {
         this.view = view;
         setup();
     }
 
+    /**
+     * Configura los listeners de los botones de la vista.
+     */
     private void setup() {
         view.getBtnSimular().addActionListener(e -> startSimulation());
         view.getBtnDetener().addActionListener(e -> stopSimulation());
         view.getBtnCalcTimeGround().addActionListener(e -> calcTimeGround());
     }
 
+    /**
+     * Inicia la simulación de caída libre.
+     * Lee los parámetros de la vista, valida los datos, configura el modelo
+     * y comienza la animación.
+     */
     private void startSimulation() {
         try {
             initialHeight = Double.parseDouble(view.getHeightString());
@@ -80,6 +118,10 @@ public class FreeFallController {
         }
     }
 
+    /**
+     * Detiene la simulación de caída libre.
+     * Cancela el timer de animación y actualiza el estado de la vista.
+     */
     private void stopSimulation() {
         if (animationTimer != null) {
             animationTimer.stop();
@@ -88,6 +130,11 @@ public class FreeFallController {
         view.setSimulationRunning(false);
     }
 
+    /**
+     * Actualiza el estado de la animación en cada frame.
+     * Calcula la nueva posición, velocidad y telemetría, y actualiza la vista.
+     * Si el objeto llega al suelo, detiene la simulación e inicia el efecto de rebote.
+     */
     private void updateAnimation() {
         if (model == null) return;
 
@@ -132,6 +179,10 @@ public class FreeFallController {
         view.getAnimationPanel().repaint();
     }
 
+    /**
+     * Calcula y muestra el tiempo necesario para que el objeto toque el suelo.
+     * También muestra la velocidad de impacto.
+     */
     private void calcTimeGround() {
         try {
             double y0 = Double.parseDouble(view.getHeightString());

@@ -9,6 +9,14 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * Vista principal de la aplicación.
+ * Muestra la pantalla de inicio con opciones para seleccionar
+ * entre simulación de Caída Libre o Movimiento Rectilíneo Uniforme (MRU).
+ * 
+ * @author SimuladorFisica
+ * @version 1.0
+ */
 public class MainView extends JFrame {
     private final JButton btnFreeFall = createPrimaryButton("Explorar caída libre");
     private final JButton btnMRU = createPrimaryButton("Explorar MRU");

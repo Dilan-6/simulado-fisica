@@ -8,27 +8,68 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.text.DecimalFormat;
 
+/**
+ * Vista principal para la simulación de caída libre.
+ * Proporciona una interfaz gráfica con controles para configurar parámetros,
+ * visualizar la animación y mostrar telemetría en tiempo real.
+ * 
+ * @author SimuladorFisica
+ * @version 1.0
+ */
 public class FreeFallView extends JDialog {
+    /** Formato para mostrar valores numéricos con 2 decimales */
     private static final DecimalFormat DF = new DecimalFormat("0.00");
 
+    /** Campo de texto para la altura inicial en metros */
     private final JTextField tfHeight = new JTextField("50");
+    
+    /** Campo de texto para la velocidad inicial en m/s */
     private final JTextField tfV0 = new JTextField("0");
+    
+    /** Botón para iniciar la simulación */
     private final JButton btnSimular = new JButton("▶ Empezar");
+    
+    /** Botón para detener la simulación */
     private final JButton btnDetener = new JButton("⏸ Detener");
+    
+    /** Botón para calcular el tiempo hasta el suelo */
     private final JButton btnCalcTimeGround = new JButton("🧮 Tiempo al suelo");
 
+    /** Radio button para seleccionar la pelota como objeto */
     private final JRadioButton rbBall = new JRadioButton("Pelota", true);
+    
+    /** Radio button para seleccionar el dinosaurio como objeto */
     private final JRadioButton rbDino = new JRadioButton("Dino");
+    
+    /** Panel que muestra la animación de la caída */
     private final AnimationPanel animationPanel = new AnimationPanel();
 
+    /** Etiqueta que muestra el tiempo transcurrido */
     private final JLabel lblTimeValue = createValueLabel("0.00 s");
+    
+    /** Etiqueta que muestra la altura actual */
     private final JLabel lblHeightValue = createValueLabel("0.00 m");
+    
+    /** Etiqueta que muestra la distancia caída */
     private final JLabel lblDistanceValue = createValueLabel("0.00 m");
+    
+    /** Etiqueta que muestra la velocidad actual */
     private final JLabel lblVelocityValue = createValueLabel("0.00 m/s");
+    
+    /** Etiqueta que muestra el tiempo restante hasta el suelo */
     private final JLabel lblRemainingValue = createValueLabel("0.00 s");
+    
+    /** Etiqueta que muestra el estado de la simulación */
     private final JLabel lblStatus = new JLabel("Listo para simular.");
+    
+    /** Barra de progreso que muestra el avance del tiempo */
     private final JProgressBar progressTime = new JProgressBar(0, 1000);
 
+    /**
+     * Construye una nueva vista de caída libre.
+     * 
+     * @param parent Ventana padre (modal)
+     */
     public FreeFallView(JFrame parent) {
         super(parent, "Caída Libre", true);
         setSize(880, 640);
@@ -88,6 +129,11 @@ public class FreeFallView extends JDialog {
         getRootPane().setDefaultButton(btnSimular);
     }
 
+    /**
+     * Construye el panel de entrada de parámetros iniciales.
+     * 
+     * @return Panel con campos de altura y velocidad inicial
+     */
     private JPanel buildInputPanel() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -98,6 +144,11 @@ public class FreeFallView extends JDialog {
         return panel;
     }
 
+    /**
+     * Construye el panel de selección de objeto.
+     * 
+     * @return Panel con opciones de pelota o dinosaurio
+     */
     private JPanel buildObjectPanel() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -115,6 +166,11 @@ public class FreeFallView extends JDialog {
         return panel;
     }
 
+    /**
+     * Construye el panel de telemetría con valores en tiempo real.
+     * 
+     * @return Panel con etiquetas de tiempo, altura, distancia, velocidad y progreso
+     */
     private JPanel buildTelemetryPanel() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -137,6 +193,11 @@ public class FreeFallView extends JDialog {
         return panel;
     }
 
+    /**
+     * Construye el panel de controles con botones de simulación.
+     * 
+     * @return Panel con botones de empezar, detener y calcular tiempo
+     */
     private JPanel buildControlsPanel() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -158,6 +219,13 @@ public class FreeFallView extends JDialog {
         return panel;
     }
 
+    /**
+     * Crea un panel con estilo de tarjeta (card) con título y contenido.
+     * 
+     * @param title Título de la tarjeta
+     * @param component Componente a colocar dentro de la tarjeta
+     * @return Panel con estilo de tarjeta
+     */
     private JPanel createCard(String title, JComponent component) {
         JPanel card = new JPanel(new BorderLayout(10, 10));
         card.setBackground(Color.WHITE);
@@ -178,6 +246,13 @@ public class FreeFallView extends JDialog {
         return card;
     }
 
+    /**
+     * Crea un bloque de entrada con etiqueta y campo de texto.
+     * 
+     * @param title Texto de la etiqueta
+     * @param field Campo de texto a incluir
+     * @return Panel con el bloque de entrada
+     */
     private JPanel createInputBlock(String title, JTextField field) {
         JPanel block = new JPanel();
         block.setOpaque(false);
@@ -193,6 +268,13 @@ public class FreeFallView extends JDialog {
         return block;
     }
 
+    /**
+     * Crea una fila de telemetría con etiqueta y valor.
+     * 
+     * @param title Texto de la etiqueta
+     * @param value Etiqueta que muestra el valor
+     * @return Panel con la fila de telemetría
+     */
     private JPanel createTelemetryRow(String title, JLabel value) {
         JPanel row = new JPanel(new BorderLayout());
         row.setOpaque(false);
@@ -202,6 +284,12 @@ public class FreeFallView extends JDialog {
         return row;
     }
 
+    /**
+     * Crea una etiqueta con estilo estándar.
+     * 
+     * @param text Texto de la etiqueta
+     * @return JLabel con estilo aplicado
+     */
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("SansSerif", Font.PLAIN, 13));
@@ -209,6 +297,12 @@ public class FreeFallView extends JDialog {
         return label;
     }
 
+    /**
+     * Crea una etiqueta para mostrar valores numéricos con estilo destacado.
+     * 
+     * @param text Texto inicial del valor
+     * @return JLabel con estilo de valor aplicado
+     */
     private JLabel createValueLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -271,6 +365,16 @@ public class FreeFallView extends JDialog {
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
+    /**
+     * Actualiza los valores de telemetría mostrados en la vista.
+     * 
+     * @param time Tiempo transcurrido en segundos
+     * @param height Altura actual en metros
+     * @param distanceFallen Distancia caída en metros
+     * @param velocity Velocidad actual en m/s (positiva hacia abajo)
+     * @param timeRemaining Tiempo restante hasta el suelo en segundos (-1 si no aplica)
+     * @param progress Progreso de la simulación (0.0 a 1.0)
+     */
     public void updateTelemetry(double time, double height, double distanceFallen, double velocity, double timeRemaining, double progress) {
         lblTimeValue.setText(DF.format(time) + " s");
         lblHeightValue.setText(DF.format(height) + " m");
@@ -291,10 +395,20 @@ public class FreeFallView extends JDialog {
         progressTime.setString(String.format("%d %% del tiempo", Math.round(progressValue / 10.0)));
     }
 
+    /**
+     * Muestra un mensaje de estado en la vista.
+     * 
+     * @param text Texto del estado a mostrar
+     */
     public void showStatus(String text) {
         lblStatus.setText(text);
     }
 
+    /**
+     * Actualiza el estado de los botones según si la simulación está corriendo.
+     * 
+     * @param running true si la simulación está en progreso, false en caso contrario
+     */
     public void setSimulationRunning(boolean running) {
         btnSimular.setEnabled(!running);
         btnDetener.setEnabled(running);
@@ -311,6 +425,10 @@ public class FreeFallView extends JDialog {
     public JButton getBtnCalcTimeGround() { return btnCalcTimeGround; }
     public AnimationPanel getAnimationPanel() { return animationPanel; }
 
+    /**
+     * Panel interno que renderiza la animación visual de la caída libre.
+     * Dibuja el escenario con cielo, nubes, edificios, suelo y el objeto en caída.
+     */
     public static class AnimationPanel extends JPanel {
         private ImageIcon icon = ImageLoader.load("resources/ball.png", 80, 80);
         private double y = 50;
@@ -319,16 +437,32 @@ public class FreeFallView extends JDialog {
             setBackground(new Color(223, 236, 255));
         }
 
+        /**
+         * Establece el icono del objeto a animar.
+         * 
+         * @param icon Icono del objeto (pelota o dinosaurio)
+         */
         public void setCharacter(ImageIcon icon) {
             this.icon = icon;
             repaint();
         }
 
+        /**
+         * Establece la posición vertical del objeto en píxeles.
+         * 
+         * @param y Posición Y en píxeles
+         */
         public void setY(double y) {
             this.y = y;
             repaint();
         }
 
+        /**
+         * Mueve el objeto verticalmente por un desplazamiento dado.
+         * Usado para el efecto de rebote al tocar el suelo.
+         * 
+         * @param offset Desplazamiento en píxeles (positivo hacia abajo)
+         */
         public void move(double offset) {
             this.y += offset;
             repaint();

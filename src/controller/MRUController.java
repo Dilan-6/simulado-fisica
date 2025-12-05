@@ -4,28 +4,66 @@ import javax.swing.*;
 import model.MRUModel;
 import view.MRUView;
 
+/**
+ * Controlador para la simulación de Movimiento Rectilíneo Uniforme (MRU).
+ * Gestiona la lógica de negocio, la animación y la interacción entre
+ * el modelo y la vista de MRU.
+ * 
+ * @author SimuladorFisica
+ * @version 1.0
+ */
 public class MRUController {
+    /** Vista asociada al controlador */
     private MRUView view;
+    
+    /** Timer que controla la animación de la simulación */
     private Timer animationTimer;
+    
+    /** Tiempo actual de la simulación en segundos */
     private double t;
+    
+    /** Modelo físico de MRU */
     private MRUModel model;
+    
+    /** Escala de conversión de metros a píxeles */
     private double pixelScale;
+    
+    /** Desplazamiento base en píxeles para centrar la animación */
     private double baseOffset;
+    
+    /** Tiempo total de la simulación en segundos */
     private double totalTime;
+    
+    /** Posición inicial del objeto en metros */
     private double x0;
+    
+    /** Posición final del objeto en metros */
     private double finalPosition;
 
+    /**
+     * Construye un nuevo controlador de MRU.
+     * 
+     * @param view Vista de MRU a controlar
+     */
     public MRUController(MRUView view) {
         this.view = view;
         setup();
     }
 
+    /**
+     * Configura los listeners de los botones de la vista.
+     */
     private void setup() {
         view.getBtnRun().addActionListener(e -> startAnimation());
         view.getBtnTimeToX().addActionListener(e -> onTimeToX());
         view.getBtnCalculateV().addActionListener(e -> onCalculateVelocity());
     }
 
+    /**
+     * Inicia la animación de MRU.
+     * Lee los parámetros de la vista, calcula la velocidad si es necesario,
+     * configura el modelo y comienza la animación.
+     */
     private void startAnimation() {
         try {
             x0 = Double.parseDouble(view.getX0());
@@ -120,6 +158,10 @@ public class MRUController {
         }
     }
 
+    /**
+     * Detiene la animación de MRU.
+     * Cancela el timer de animación y actualiza el estado de la vista.
+     */
     private void stopAnimation() {
         if (animationTimer != null) {
             animationTimer.stop();
@@ -128,6 +170,11 @@ public class MRUController {
         view.setSimulationRunning(false);
     }
 
+    /**
+     * Actualiza el estado de la animación en cada frame.
+     * Calcula la nueva posición, desplazamiento y telemetría, y actualiza la vista.
+     * Si se alcanza el tiempo total, detiene la simulación.
+     */
     private void update() {
         t += 0.05;
         if (t > totalTime) t = totalTime;
@@ -154,6 +201,10 @@ public class MRUController {
         }
     }
 
+    /**
+     * Calcula y muestra el tiempo necesario para llegar a una posición destino.
+     * Valida que se proporcionen posición final y velocidad.
+     */
     private void onTimeToX() {
         try {
             double x0 = Double.parseDouble(view.getX0());
@@ -215,6 +266,10 @@ public class MRUController {
         }
     }
     
+    /**
+     * Calcula y muestra la velocidad necesaria para llegar a una posición final
+     * en un tiempo dado. Actualiza el campo de velocidad en la vista.
+     */
     private void onCalculateVelocity() {
         try {
             double x0 = Double.parseDouble(view.getX0());
